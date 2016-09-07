@@ -7,7 +7,7 @@ void Bcm1fEfficiency()
    std::map<int,float>::iterator mapit;
    
    // Check if fill already analysed to save time
-   TString dirname = "./dataid1/n1n2norm/";
+   TString dirname = "./dataid1/luminorm/";
    TSystemDirectory dir(dirname,dirname);
    TList *files = dir.GetListOfFiles();
    files -> Sort();
@@ -74,19 +74,22 @@ void Bcm1fEfficiency()
    }
    
    int nFills = (int)fill.size();
-   for ( int j = 0; j < nFills; ++j )
-   {
-      std::cout << "oioi " << fill[j] << std::endl;
-   }
+//    for ( int j = 0; j < nFills; ++j )
+//    {
+//       std::cout << "oioi " << fill[j] << std::endl;
+//    }
    
    for ( size_t i = 0 ; i < unmaskedChannels.size() ; ++i )
    {
       int ch = unmaskedChannels[i];
       gr[ch] = new TGraphErrors(nFills,intLumi,specRate[ch],vFillErr,specRateErr[ch]);
    }
+   // change channel here
+   gr[41] -> Draw("ALP");
    
-   gr[45] -> Draw("ALP");
    
+   cout << lumiReport[4958] << endl;
+   cout << lumiReport[5258] << endl;
 }
 
 
