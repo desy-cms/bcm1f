@@ -11,9 +11,12 @@ def blocks(fill, margin = 0):
    lines = f.readlines()
    f.close()
    
-   utcprev = int(lines[0].strip().split(",")[4])
    block = 0
    blocks = {}
+   if len(lines) == 0:
+      return blocks
+   
+   utcprev = int(lines[0].strip().split(",")[4])
    begin = utcprev
    end = -1
    for line in lines:
