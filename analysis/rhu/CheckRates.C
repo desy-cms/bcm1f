@@ -1,4 +1,4 @@
-void CheckRates()
+void CheckRates(int fill = 4958)
 {
    static const int nbx = 3564;
    static const int ntrains = 100;  // a large number, larger than usual number of trains
@@ -10,7 +10,7 @@ void CheckRates()
    float bxlumi[3564];
    
    
-   TFile * f  = new TFile("/tmp/roberval/rhuv4/rhu_4990.root","OLD");
+   TFile * f  = new TFile(Form("/tmp/bcm1f/rhu/rhu_%i.root",fill),"OLD");
    
    // Filling scheme
    TTree * t_info = (TTree*) f -> Get("beaminfo");
@@ -96,6 +96,7 @@ void CheckRates()
    {
       crates[i] = new TCanvas(Form("crates_%i",i),"");
       crates[i] -> SetRightMargin(0.3);
+      crates[i] -> SetLeftMargin(0.15);
       mgrates[i] = new TMultiGraph(Form("mgrates_%i",i),"");
       leg[i] = new TLegend(0.72,0.4,0.95,0.9,NULL,"brNDC");
       TLegendEntry *entry;
@@ -105,7 +106,7 @@ void CheckRates()
          grates[ich] = new TGraph(n,utctime,rates_spec[ich]);
          grates[ich] -> SetName(Form("grates_%i",ich));
          grates[ich] -> SetMarkerStyle(20);
-         grates[ich] -> SetMarkerSize(0.8);
+         grates[ich] -> SetMarkerSize(0.7);
          grates[ich] -> SetMarkerColor(j+1);
          mgrates[i] -> Add(grates[ich]);
          entry = leg[i]->AddEntry(Form("grates_%i",ich),Form("channel %i",ich),"p");
@@ -114,8 +115,12 @@ void CheckRates()
          entry -> SetMarkerColor(j+1);
       }
       mgrates[i] -> SetMinimum(0);
+      mgrates[i] -> SetTitle(Form("Fill %i",fill));
       mgrates[i] -> Draw("AP");
       mgrates[i] -> GetXaxis() -> SetNdivisions(504);
+      mgrates[i] -> GetXaxis() -> SetTitle("UTC Unix time");
+      mgrates[i] -> GetYaxis() -> SetTitle("<rate>/BX/(i1*i2) per 10^{22} protons");
+      mgrates[i] -> GetYaxis() -> SetTitleOffset(1.5);
       leg[i] -> Draw();
    }
    

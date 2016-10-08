@@ -20,12 +20,15 @@ test = False
 directory = '/brildata/16/'+fillnr
 filenames = glob.glob(directory+'/*.hd5')
 
-
 skipMinutes = -1
-durationInMinutes = 40
+durationInMinutes = 60
 lastTimeStamp = 0
 firstTimeStamp = 0
-endVdM = int(vdmtime.blocks(fillnr)[0][1])
+vdmBlocks = vdmtime.blocks(fillnr)
+if len(vdmBlocks) == 0:
+   sys.exit("There is no VdM information available for this fill.\nTry another fill.")
+
+endVdM = int(vdmBlocks[0][1])
 
 print "Will consider data only after the miniVdM scan, i.e. after utc time", endVdM
 
@@ -37,7 +40,7 @@ if test:
    filename = 'test.root'
 
 #if myalgoid == 2:
-rootfile = TFile( '/tmp/roberval/rhuv4/'+filename, 'RECREATE' )
+rootfile = TFile( '/tmp/bcm1f/rhu/'+filename, 'RECREATE' )
 #else:
 #   rootfile = TFile( '/tmp/roberval/rhu/algoid1/'+filename, 'RECREATE' )
 
@@ -124,9 +127,10 @@ for ifile,filename in enumerate(filenames):
             treeBeamInfo.Fill()
             break
             
+    if firstTimeStamp == 0:
+       continue
     
     for irow,row in enumerate(bcm1f.iterrows()):
-    
        nowTimeStamp = int(row['timestampsec'])
        
        if nowTimeStamp < firstTimeStamp:
@@ -138,8 +142,8 @@ for ifile,filename in enumerate(filenames):
            if hasBestlumiInfo and hasBeamInfo:
               mytime[0] = lastTimeStamp
               tree.Fill()
-              if (lastTimeStamp - firstTimeStamp) % 60 == 0:
-                 print mytime[0], nowTimeStamp
+#              if (lastTimeStamp - firstTimeStamp) % 60 == 0:
+#                 print mytime[0], nowTimeStamp
               if (lastTimeStamp - firstTimeStamp) > durationInMinutes*60:
                  isFinished = True
                  break
