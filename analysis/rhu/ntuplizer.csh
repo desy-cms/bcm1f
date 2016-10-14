@@ -8,6 +8,7 @@ endif
 set dir = /tmp/bcm1f/rhu/
 if ( ! -d $dir ) then
    mkdir -p $dir
+   chmod a+w -R /tmp/bcm1f/
 endif
 
 set fill = $1
